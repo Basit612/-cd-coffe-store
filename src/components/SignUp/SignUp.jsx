@@ -1,15 +1,47 @@
+import { useContext } from "react";
+import { AuthContext } from "../Provider/AuthProvider";
 
 
 const SignUp = () => {
-  con
+  const{createUser}= useContext(AuthContext);
+
+
+  const handleLogin = e =>{
+    e.preventDefault();
+    const form = e.target;
+    const email= form.email.value;
+    const password= form.password.value;
+    console.log(email,password);
+    createUser(email,password)
+    .then(result =>{
+      console.log(result.user);
+      // new user has been created
+      // const createdAt= result.user?.metadata?.creationTime;
+      const user={email};
+      fetch('http://localhost:5000/user', {
+        method:'POST',
+        headers:{
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+    })
+    .catch(error =>{
+      console.log(error);
+    })
+  }
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="container mx-auto">
+    <div className="hero min-h-screen bg-base-200 rounded-md">
+      <div className="container mx-auto ">
         <div className="text-center">
           <h1 className="text-5xl font-bold">Login now!</h1>
         </div>
-        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 container mx-auto">
-          <form className="card-body">
+        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 container mx-auto mt-6">
+          <form onSubmit={handleLogin} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
